@@ -1,0 +1,346 @@
+[
+    {
+        "id": "8df6c2008f2ca194",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "7cbdd045e1ce1311",
+        "type": "ui_gauge",
+        "z": "8df6c2008f2ca194",
+        "name": "",
+        "group": "48ef4f4038e992f3",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Current (A)",
+        "label": "A",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "5",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "1.5",
+        "seg2": "3",
+        "diff": false,
+        "className": "",
+        "x": 530,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "eafab9115b77bb7b",
+        "type": "mqtt in",
+        "z": "8df6c2008f2ca194",
+        "name": "",
+        "topic": "factory/nodeB/current",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "52963923bd815d10",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 280,
+        "y": 220,
+        "wires": [
+            [
+                "1675c035427aacd2",
+                "8ea3f0191b4c0b0d",
+                "c9d70d5aa7da7db6"
+            ]
+        ]
+    },
+    {
+        "id": "1675c035427aacd2",
+        "type": "function",
+        "z": "8df6c2008f2ca194",
+        "name": "function 1",
+        "func": "msg.payload = parseFloat(msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 200,
+        "wires": [
+            [
+                "7cbdd045e1ce1311"
+            ]
+        ]
+    },
+    {
+        "id": "b7afd7d5c9473666",
+        "type": "mqtt in",
+        "z": "8df6c2008f2ca194",
+        "name": "",
+        "topic": "factory/nodeB/alarm",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "52963923bd815d10",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 570,
+        "y": 400,
+        "wires": [
+            [
+                "c3f403a53694bd1a"
+            ]
+        ]
+    },
+    {
+        "id": "cd3a566eceb8cc4b",
+        "type": "ui_text",
+        "z": "8df6c2008f2ca194",
+        "group": "48ef4f4038e992f3",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Overcurrent Alarm",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 850,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "01039dc470d2d82b",
+        "type": "ui_button",
+        "z": "8df6c2008f2ca194",
+        "name": "",
+        "group": "48ef4f4038e992f3",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "label": "Buzzer ON",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "ON",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 370,
+        "y": 540,
+        "wires": [
+            [
+                "16e2a0426b057f8d"
+            ]
+        ]
+    },
+    {
+        "id": "16e2a0426b057f8d",
+        "type": "mqtt out",
+        "z": "8df6c2008f2ca194",
+        "name": "",
+        "topic": "factory/nodeB/cmd",
+        "qos": "0",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "52963923bd815d10",
+        "x": 230,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "b107a513072812e9",
+        "type": "ui_button",
+        "z": "8df6c2008f2ca194",
+        "name": "",
+        "group": "48ef4f4038e992f3",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "label": "Buzzer OFF",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "OFF",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 170,
+        "y": 600,
+        "wires": [
+            [
+                "16e2a0426b057f8d"
+            ]
+        ]
+    },
+    {
+        "id": "8ea3f0191b4c0b0d",
+        "type": "function",
+        "z": "8df6c2008f2ca194",
+        "name": "Overcurrent Threshold Logic",
+        "func": "const THRESHOLD = 3;  \n\nif (Number(msg.payload) > THRESHOLD) {\n    msg.payload = \"ON\";\n} else {\n    msg.payload = \"OFF\";\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 240,
+        "y": 360,
+        "wires": [
+            [
+                "16e2a0426b057f8d"
+            ]
+        ]
+    },
+    {
+        "id": "c9d70d5aa7da7db6",
+        "type": "ui_chart",
+        "z": "8df6c2008f2ca194",
+        "name": "Current Chart",
+        "group": "48ef4f4038e992f3",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "label": "Current vs Time",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "Waiting for MQTT data...",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "4",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 480,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c3f403a53694bd1a",
+        "type": "change",
+        "z": "8df6c2008f2ca194",
+        "name": "Alarm Control Logic",
+        "rules": [
+            {
+                "t": "set",
+                "p": "ui_control",
+                "pt": "msg",
+                "to": "{\"color\":\"{{payload === 'ON' ? 'red' : 'green'}}\"}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 740,
+        "y": 520,
+        "wires": [
+            [
+                "cd3a566eceb8cc4b"
+            ]
+        ]
+    },
+    {
+        "id": "48ef4f4038e992f3",
+        "type": "ui_group",
+        "name": "Power Monitoring",
+        "tab": "2e60430f9d3685ab",
+        "order": 1,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "52963923bd815d10",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "100.84.90.10",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "2e60430f9d3685ab",
+        "type": "ui_tab",
+        "name": "Node B",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "63c8410ee1f175f7",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-dashboard": "3.6.6"
+        }
+    }
+]
