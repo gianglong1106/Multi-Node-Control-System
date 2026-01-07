@@ -3,41 +3,41 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
 
-// ================= WIFI CONFIG =================
+// WIFI CONFIG 
 const char* ssid     = "Gooners";
 const char* password = "Pabg830!";
 
-// ================= MQTT CONFIG =================
+// MQTT CONFIG 
 const char* mqtt_server = "192.168.0.90";
 const int   mqtt_port   = 1883;
 
-// ================= MQTT TOPICS =================
+// MQTT TOPICS 
 const char* topicCurrent = "factory/nodeB/current";
 const char* topicCmd     = "factory/nodeB/cmd";
 const char* topicAlarm   = "factory/nodeB/alarm";
 
-// ================= PIN DEFINITIONS =================
+// PIN DEFINITIONS 
 const int ACS_PIN    = 34;
 const int BUZZER_PIN = 23;
 
-// ================= ADC PARAMETERS =================
+// ADC PARAMETERS
 const float ADC_REF = 3.3;
 const int   ADC_MAX = 4095;
 
-// ================= ACS712 PARAMETERS =================
+// ACS712 PARAMETERS 
 float zeroOffset = 0.0;
 const float CURRENT_THRESHOLD = 3.0;
 const float SENSITIVITY = 0.066;
 
-// ================= PASSIVE BUZZER (ESP32 core v3) =================
+//  PASSIVE BUZZER 
 const uint32_t BUZZER_FREQ = 2000;
 const uint8_t  BUZZER_RES  = 8;
 
-// ================= OBJECTS =================
+// OBJECTS 
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-// ================= WIFI =================
+// WIFI 
 void connectWiFi() {
   Serial.print("Connecting to WiFi");
   WiFi.begin(ssid, password);
@@ -52,7 +52,7 @@ void connectWiFi() {
   Serial.println(WiFi.localIP());
 }
 
-// ================= MQTT =================
+// MQTT 
 void connectMQTT() {
   while (!client.connected()) {
     String clientId = "NodeB_" + String((uint32_t)ESP.getEfuseMac(), HEX);
@@ -72,7 +72,7 @@ void connectMQTT() {
   }
 }
 
-// ================= MQTT CALLBACK =================
+// MQTT CALLBACK 
 void callback(char* topic, byte* payload, unsigned int length) {
   Serial.println("\nMQTT message received");
 
@@ -99,7 +99,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
   }
 }
 
-// ================= ACS712 CALIBRATION =================
+// ACS712 CALIBRATION
 void calibrateACS712() {
   Serial.println("Calibrating ACS712 (NO LOAD)...");
   delay(2000);
@@ -115,7 +115,6 @@ void calibrateACS712() {
   Serial.println(zeroOffset, 3);
 }
 
-// ================= SETUP =================
 void setup() {
   Serial.begin(115200);
 
@@ -134,7 +133,6 @@ void setup() {
   calibrateACS712();
 }
 
-// ================= LOOP =================
 void loop() {
   if (!client.connected()) {
     Serial.println("MQTT disconnected, reconnecting...");
